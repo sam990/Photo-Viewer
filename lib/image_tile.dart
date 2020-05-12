@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'models.dart';
@@ -12,6 +13,21 @@ class ImageTile extends StatelessWidget {
   Widget _addRoundedCorners(Widget widget) =>
       // wrap in ClipRRect to achieve rounded corners
       ClipRRect(borderRadius: BorderRadius.circular(4.0), child: widget);
+
+  ///Adds shadow to a given [Widget].
+  Widget _addShadow(Widget widget) => Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.4),
+              spreadRadius: 2,
+              blurRadius: 10,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: widget,
+      );
 
   /// Returns a placeholder to show until an image is loaded.
   Widget _buildImagePlaceholder({UnsplashImage image}) => Container(
@@ -32,27 +48,29 @@ class ImageTile extends StatelessWidget {
       );
 
   @override
-  Widget build(BuildContext context) =>
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _addShadow(
+            _addRoundedCorners(CachedNetworkImage(
+              placeholder: (context, url) =>
+                  _buildImagePlaceholder(image: image),
+              errorWidget: (context, url, obj) => _buildImageErrorWidget(),
+              imageUrl: image?.getSmallUrl(),
+              fit: BoxFit.cover,
+            )),
+          ),
 
-   Column(
-     crossAxisAlignment: CrossAxisAlignment.start,
-     children: <Widget>[
-       _addRoundedCorners(CachedNetworkImage(
-         placeholder: (context, url) =>
-             _buildImagePlaceholder(image: image),
-         errorWidget: (context, url, obj) => _buildImageErrorWidget(),
-         imageUrl: image?.getSmallUrl(),
-         fit: BoxFit.cover,
-       )
-       ),
-       ///the name of the artist
-       Padding(
-         padding: const EdgeInsets.only(left: 2.0),
-         child: Text(image.getUser().getFullName(), style: TextStyle(
-           color: Colors.black
-         ))
-       )
-
-     ],
-   );
+          ///the name of the artist
+          Padding(
+            padding: const EdgeInsets.only(left: 2.0, top: 6.0),
+            child: AutoSizeText(
+              image.getUser().getFullName(),
+              style:
+                  TextStyle(color: Colors.black, height: 1.0, fontSize: 14.0),
+              maxLines: 1,
+            ), //AutoSizeText automatically manages size if lines increase
+          )
+        ],
+      );
 }

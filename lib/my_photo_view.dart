@@ -127,9 +127,9 @@ class MyPhotoViewState extends State<MyPhotoView> with AutomaticKeepAliveClientM
     double aspectRatio =
         image.getHeight().toDouble() / image.getWidth().toDouble();
     // calc columnWidth
-    double columnWidth = MediaQuery.of(context).size.width / columnCount;
+    double columnWidth = (MediaQuery.of(context).size.width / columnCount) - 24.0;
     // not using [StaggeredTile.fit(1)] because during loading StaggeredGrid is really jumpy.
-    return StaggeredTile.extent(1, aspectRatio * columnWidth + 16.0);
+    return StaggeredTile.extent(1, (aspectRatio * columnWidth) + 22.0);
   }
 
   /// Returns the grid that displays images.
