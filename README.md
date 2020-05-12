@@ -1,16 +1,25 @@
-# photoviewer
+# PhotoViewer
 
-Application for fetching image from unsplash
+Application for fetching image from unsplash.
 
-## Getting Started
+# Build
+Add keys.dart to the lib folder containing following class:
 
-This project is a starting point for a Flutter application.
+'''
+class Keys{
+  static String UNSPLASH_API_CLIENT_ID = YOUR_ACCESS_KEY;
+}
+'''
+# Screesnshots
 
-A few resources to get you started if this is your first Flutter project:
+x-special/nautilus-clipboard
+copy
+file:///home/sam/Desktop/Screenshot_1589299470.png
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+x-special/nautilus-clipboard
+copy
+file:///home/sam/Desktop/Screenshot_1589299463.png
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# TODO
+
+Add download button to download a photo
