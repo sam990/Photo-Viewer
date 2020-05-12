@@ -21,7 +21,7 @@ class ImageTile extends StatelessWidget {
             : Colors.grey[200],
       );
 
-  /// Returns a error placeholder to show until an image is loaded.
+  /// Returns a error placeholder to show when error occurs.
   Widget _buildImageErrorWidget() => Container(
         color: Colors.grey[200],
         child: Center(
@@ -45,6 +45,7 @@ class ImageTile extends StatelessWidget {
          fit: BoxFit.cover,
        )
        ),
+       ///the name of the artist
        Padding(
          padding: const EdgeInsets.only(left: 2.0),
          child: Text(image.getUser().getFullName(), style: TextStyle(

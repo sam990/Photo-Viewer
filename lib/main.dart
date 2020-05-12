@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext buildContext) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Yeah Flutter',
+        title: 'PhotoViewerr',
         theme: ThemeData(primaryColor: Colors.black),
         home: CustomTabView());
   }

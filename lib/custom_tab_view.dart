@@ -38,6 +38,7 @@ class CustomTabViewState extends State<CustomTabView>
   List _keys = [];
   bool _buttonTap = false;
 
+
   @override
   void initState() {
     super.initState();
@@ -75,20 +76,38 @@ class CustomTabViewState extends State<CustomTabView>
     super.dispose();
   }
 
+  //returns the tab bar button for i position
+ Widget  _getTabBar(final int i){
+    return Padding(
+        key: _keys[i],
+        padding: EdgeInsets.all(1.0),
+        child: ButtonTheme(
+            child: AnimatedBuilder(
+              animation: _colorTweenBackgroundOn,
+              builder: (context, child) => FlatButton(
+                  color: _getBackgroundColor(i),
+                  shape: ContinuousRectangleBorder(
+                      borderRadius:
+                      new BorderRadius.circular(
+                          5.0)),
+                  onPressed: () {
+                    setState(() {
+                      _buttonTap = true;
+                      _controller.animateTo(i);
+                      _setCurrentIndex(i);
+                    });
+                  },
+                  child: Text(textlist[i],
+                      style: TextStyle(
+                          color:
+                          _getForegroundColor(i)))),
+            )));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-//          appBar: AppBar(
-//            elevation: 0.0,
-//            automaticallyImplyLeading: false,
-//            backgroundColor: Colors.transparent,
-//            title: Container(
-//              width: 150,
-//              height: 60,
-//              child: Text('YES' ,),
-//            ),
-//          ),
           backgroundColor: Colors.white,
           body: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,65 +128,14 @@ class CustomTabViewState extends State<CustomTabView>
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                      key: _keys[0],
-                                      padding: EdgeInsets.all(1.0),
-                                      child: ButtonTheme(
-                                          child: AnimatedBuilder(
-                                            animation: _colorTweenBackgroundOn,
-                                            builder: (context, child) => FlatButton(
-                                                color: _getBackgroundColor(0),
-                                                shape: ContinuousRectangleBorder(
-                                                    borderRadius:
-                                                    new BorderRadius.circular(
-                                                        5.0)),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _buttonTap = true;
-                                                    _controller.animateTo(0);
-                                                    _setCurrentIndex(0);
-                                                    _scrollTo(0);
-                                                  });
-                                                },
-                                                child: Text(textlist[0],
-                                                    style: TextStyle(
-                                                        color:
-                                                        _getForegroundColor(0)))),
-                                          ))),
-                                  Padding(
-                                      key: _keys[1],
-                                      padding: EdgeInsets.all(1.0),
-                                      child: ButtonTheme(
-                                          child: AnimatedBuilder(
-                                            animation: _colorTweenBackgroundOn,
-                                            builder: (context, child) => FlatButton(
-                                                color: _getBackgroundColor(1),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(5.0),
-                                                ),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _buttonTap = true;
-                                                    _controller.animateTo(1);
-                                                    _setCurrentIndex(1);
-                                                    _scrollTo(1);
-                                                  });
-                                                },
-                                                child: Text(
-                                                  textlist[1],
-                                                  style: TextStyle(
-                                                      color: _getForegroundColor(1)),
-                                                )),
-                                          ))),
-                                ],
+                                children: _keys.asMap().keys.map((i) => _getTabBar(i)).toList(),
                               )))),
                   Flexible(
                       child: TabBarView(
                         controller: _controller,
                         children: <Widget>[
-                          MyPhotoView('1580860'),
-                        MyPhotoView('139386')
+                          MyPhotoView('1580860'), //collection views
+                          MyPhotoView('139386')
                         ],
                       )),
                   SizedBox(height: 20)]),
@@ -175,6 +143,7 @@ class CustomTabViewState extends State<CustomTabView>
     );
   }
 
+  //method for handling the tab change animation
   _handleTabAnimation() {
     _aniValue = _controller.animation.value;
     if (!_buttonTap && ((_aniValue - _prevAniValue).abs() < 1)) {
@@ -183,6 +152,7 @@ class CustomTabViewState extends State<CustomTabView>
     _prevAniValue = _aniValue;
   }
 
+  //method for handling the tab change
   _handleTabChange() {
     if (_buttonTap) _setCurrentIndex(_controller.index);
     if ((_controller.index == _prevControllerIndex) ||
@@ -190,13 +160,14 @@ class CustomTabViewState extends State<CustomTabView>
     _prevControllerIndex = _controller.index;
   }
 
+
+  //set the active tab bar
   _setCurrentIndex(int index) {
     if (index != _currentIndex) {
       setState(() {
         _currentIndex = index;
       });
       _triggerAnimation();
-      _scrollTo(index);
     }
   }
 
@@ -207,28 +178,6 @@ class CustomTabViewState extends State<CustomTabView>
     _animationControllerOff.forward();
   }
 
-  _scrollTo(int index) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    RenderBox renderBox = _keys[index].currentContext.findRenderObject();
-    double size = renderBox.size.width;
-    double position = renderBox.localToGlobal(Offset.zero).dx;
-    double offset = (position + size / 2) - screenWidth / 2;
-    if (offset < 0) {
-      renderBox = _keys[0].currentContext.findRenderObject();
-      position = renderBox.localToGlobal(Offset.zero).dx;
-      if (position > offset) offset = position;
-    } else {
-      renderBox = _keys[textlist.length - 1].currentContext.findRenderObject();
-      position = renderBox.localToGlobal(Offset.zero).dx;
-      size = renderBox.size.width;
-      if (position + size < screenWidth) screenWidth = position + size;
-      if (position + size - offset < screenWidth) {
-        offset = position + size - screenWidth;
-      }
-    }
-//    _scrollController.animateTo(offset + _scrollController.offset,
-//        duration: new Duration(milliseconds: 150), curve: Curves.easeInOut);
-  }
 
   _getBackgroundColor(int index) {
     if (index == _currentIndex) {

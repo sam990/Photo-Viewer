@@ -54,7 +54,7 @@ class UnsplashImageProvider {
   }
 
 
-  static Future<int> imagesInCollection(String collectionId) async {
+  static Future<int> pagesInCollection(String collectionId) async {
     String url = 'https://api.unsplash.com/collections/$collectionId';
     var data = await _getImageData(url);
     return (data['total_photos'] + 9) ~/ 10;
@@ -63,11 +63,10 @@ class UnsplashImageProvider {
   static Future<List> loadImagesOfCollection(String collectionId ,
   {int page = 1, int perPage = 10}) async{
 
-    int totalPages = (await imagesInCollection(collectionId));
+    int totalPages = await pagesInCollection(collectionId);
 
     String url = 'https://api.unsplash.com/collections/$collectionId/photos?page=$page&per_page=$perPage&order_by=latest';
     var data = await _getImageData(url);
-
     // generate UnsplashImage List from received data
     List<UnsplashImage> images =
       List<UnsplashImage>.generate(data.length, (index) {

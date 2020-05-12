@@ -17,7 +17,7 @@ class MyPhotoView extends StatefulWidget {
 
 /// Provide a state for [MainPage].
 class MyPhotoViewState extends State<MyPhotoView> with AutomaticKeepAliveClientMixin<MyPhotoView>{
-
+  ///maintains persistence when switching tabs
   bool get wantKeepAlive => true;
   /// Stores the current page index for the api requests.
   int page = 0, totalPages = -1;
@@ -25,9 +25,7 @@ class MyPhotoViewState extends State<MyPhotoView> with AutomaticKeepAliveClientM
   List<UnsplashImage> images = [];
   /// States whether there is currently a task running loading images.
   bool loadingImages = false;
-  /// Stored the currently searched keyword.
-  String keyword;
-
+  ///collection id of the collection
   String _collectionId;
 
   MyPhotoViewState(this._collectionId);
@@ -47,8 +45,6 @@ class MyPhotoViewState extends State<MyPhotoView> with AutomaticKeepAliveClientM
     // reset page counter
     page = 0;
     totalPages = -1;
-    // reset keyword
-    keyword = null;
     // show regular images
     _loadImages();
   }
@@ -73,14 +69,6 @@ class MyPhotoViewState extends State<MyPhotoView> with AutomaticKeepAliveClientM
       // set loading
       loadingImages = true;
       // check if new search
-      if (this.keyword != keyword) {
-        // clear images for new search
-        this.images = [];
-        // reset page counter
-        this.page = 0;
-      }
-      // keyword null
-      this.keyword = keyword;
     });
     // load images
     List<UnsplashImage> images;
@@ -90,13 +78,12 @@ class MyPhotoViewState extends State<MyPhotoView> with AutomaticKeepAliveClientM
     totalPages = res[0];
     // set images
     images = res[1];
-
+    //set the images
+    this.images.addAll(images);
     // update the state
     setState(() {
       // done loading
       loadingImages = false;
-      // set new loaded images
-      this.images.addAll(images);
     });
   }
 
@@ -106,7 +93,7 @@ class MyPhotoViewState extends State<MyPhotoView> with AutomaticKeepAliveClientM
     // check if new images need to be loaded
     if (index >= images.length - 2 ) {
       // Reached the end of the list. Try to load more images.
-      _loadImages();
+      await _loadImages();
     }
     return index < images.length ? images[index] : null;
   }
@@ -116,30 +103,22 @@ class MyPhotoViewState extends State<MyPhotoView> with AutomaticKeepAliveClientM
 
       Padding(
         padding: const EdgeInsets.only(top: 15.0),
-        child:  WillPopScope(
-        onWillPop: () async {
-          if (keyword != null) {
-            _resetImages();
-            return false;
-          }
-          return true;
-        },
         child: Scaffold(
             backgroundColor: Colors.grey[50],
             body: OrientationBuilder(
                 builder: (context, orientation) => CustomScrollView(
-                        // put AppBar in NestedScrollView to have it sliver off on scrolling
-                        slivers: <Widget>[
+                  // put AppBar in NestedScrollView to have it sliver off on scrolling
+                    slivers: <Widget>[
                       _buildImageGrid(orientation: orientation),
                       // loading indicator at the bottom of the list
                       loadingImages
                           ? SliverToBoxAdapter(
-                              child: LoadingIndicator(Colors.grey[400]),
-                            )
+                        child: LoadingIndicator(Colors.grey[400]),
+                      )
                           : null,
                       // filter null views
                     ].where((w) => w != null).toList()))),
-      ));
+      );
 
 
   /// Returns a StaggeredTile for a given [image].
@@ -180,8 +159,8 @@ class MyPhotoViewState extends State<MyPhotoView> with AutomaticKeepAliveClientM
   Widget _buildImageItemBuilder(int index) => FutureBuilder(
         // pass image loader
         future: _loadImage(index),
-        builder: (context, snapshot) =>
+        builder: (context, snapshot) => snapshot.hasData ? ImageTile(snapshot.data) : Container()
             // image loaded return [_ImageTile]
-            ImageTile(snapshot.data),
+
       );
 }

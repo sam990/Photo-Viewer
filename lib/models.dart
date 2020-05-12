@@ -3,10 +3,9 @@ import 'package:date_format/date_format.dart';
 /// Model for Unsplash Image
 class UnsplashImage {
   var data;
-
   UnsplashImage(this.data);
 
-  // Getter
+  // Getters
 
   String getId() {
     return data['id'];
@@ -126,7 +125,7 @@ class UnsplashUser {
   }
 
   String getLastName() {
-    return data['last_name'];
+    return data['last_name'] != null ? data['last_name']:'';
   }
 
   String getFullName() {
