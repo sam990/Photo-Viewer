@@ -11,14 +11,8 @@ class Keys{
 }
 '''
 # Screesnshots
-
-x-special/nautilus-clipboard
-copy
-file:///home/sam/Desktop/Screenshot_1589299470.png
-
-x-special/nautilus-clipboard
-copy
-file:///home/sam/Desktop/Screenshot_1589299463.png
+![Screenshot first page](/screenshots/Screenshot_First_Page.png)
+![Screenshot second page](/screenshots/Screenshot_Second_Page.png)
 
 # TODO
 
