@@ -1,6 +1,6 @@
 # PhotoViewer
 
-Application for fetching image from unsplash.
+Application for viewing images from unsplash collections.
 
 # Build
 Add keys.dart to the lib folder containing following class:
