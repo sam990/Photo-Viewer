@@ -10,8 +10,14 @@ class Keys{
 }
 ```
 # Screenshots
-![Screenshot first page](/screenshots/Screenshot_First_Page.png)
-![Screenshot second page](/screenshots/Screenshot_Second_Page.png)
+
+<table>
+  <tr>
+    <td><img src="/screenshots/Screenshot_1.png" width="240"/></td>
+    <td><img src="/screenshots/Screenshot_2.png" width="240"/></td>
+    <td><img src="/screenshots/ScreenRecording.gif" width="240"/></td>
+  </tr>
+</table>
 
 # TODO
 
